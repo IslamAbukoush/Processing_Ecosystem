@@ -11,6 +11,7 @@ public class Fish {
   private PShape sphere;
   private PVector velocity = new PVector(0, 0);
   private float scale = 0.1;
+  private float angle = 0;
   Fish(float x, float y) {
     location = new PVector(x, y);
     interval = fishHungerSpeed;
@@ -29,11 +30,28 @@ public class Fish {
   public void draw() {
     pushMatrix();
     translate(location.x, 0, location.y);
+    rotateY(angle);
     if(scale < 1) {
       scale += 0.05;
       scale(scale);
     }
+    PVector pupilLocation = new PVector(5, 2, 2);
     shape(sphere);
+    noStroke();
+    translate(size/2,-size/3,0);
+    translate(0,0,10);
+    fill(255);
+    sphere(10);
+    translate(pupilLocation.x,-pupilLocation.y,pupilLocation.z);
+    fill(0);
+    sphere(5);
+    translate(-pupilLocation.x,pupilLocation.y,-pupilLocation.z-10);
+    translate(0,0,-10);
+    fill(255);
+    sphere(10);
+    translate(pupilLocation.x,-pupilLocation.y,-pupilLocation.z);
+    fill(0);
+    sphere(5);
     popMatrix();
     displayHealth();
   }
@@ -61,9 +79,11 @@ public class Fish {
     
     
     PVector direction = PVector.sub(target.getLocation(), location);
+    print("\n");
     direction.setMag(speed);
     velocity.lerp(direction, 0.1);
     location.add(velocity);
+    angle = atan2(velocity.x, velocity.y)-PI/2;
     if(location.dist(target.getLocation()) < size/2 + target.getSize()/2) {
       plants.remove(target);
       target = null;

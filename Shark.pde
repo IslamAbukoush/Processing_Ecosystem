@@ -10,6 +10,7 @@ public class Shark {
   private PShape sphere;
   private PVector velocity = new PVector(0, 0);
   private float scale = 0.1;
+  private float angle = 0;
   Shark(float x, float y) {
     location = new PVector(x, y);
     interval = sharkHungerSpeed;
@@ -25,11 +26,29 @@ public class Shark {
   public void draw() {
     pushMatrix();
     translate(location.x, 0, location.y);
+    rotateY(angle);
     if(scale < 1) {
       scale += 0.05;
       scale(scale);
     }
+    PVector pupilLocation = new PVector(5, 2, 2);
+    PVector eyeLocation = new PVector(0,0,30);
     shape(sphere);
+    noStroke();
+    translate(size/2,-size/3,0);
+    translate(eyeLocation.x,eyeLocation.y,eyeLocation.z);
+    fill(255);
+    sphere(10);
+    translate(pupilLocation.x,-pupilLocation.y,pupilLocation.z);
+    fill(0);
+    sphere(5);
+    translate(-pupilLocation.x,pupilLocation.y,-pupilLocation.z-eyeLocation.z);
+    translate(eyeLocation.x,eyeLocation.y,-eyeLocation.z);
+    fill(255);
+    sphere(10);
+    translate(pupilLocation.x,-pupilLocation.y,-pupilLocation.z);
+    fill(0);
+    sphere(5);
     popMatrix();
     displayHealth();
 }
@@ -59,6 +78,7 @@ public class Shark {
     direction.setMag(speed);
     velocity.lerp(direction, 0.1);
     location.add(velocity);
+    angle = atan2(velocity.x, velocity.y)-PI/2;
     if(location.dist(target.getLocation()) < size/2 + target.getSize()/2) {
       if(target.target != null) target.target.setCanTarget(true);
       fishes.remove(target);
