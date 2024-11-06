@@ -102,7 +102,7 @@ void draw() {
   for(int i = 0; i < fishes.size(); i++) {
     Fish fish = fishes.get(i);
     if(fish.remove) {
-      fish.target.setCanTarget(true);
+      if(fish.target != null) fish.target.setCanTarget(true);
       fishes.remove(fish);
       i--;
       continue;
